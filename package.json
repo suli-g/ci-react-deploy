@@ -1,21 +1,23 @@
 {
-    "name": "deploy-js",
-    "version": "0.2.0",
-    "private": true,
-    "license": "ISC",
-    "homepage": "/assets",
-    "project_src": "./project.json",
-    "dependencies": {
-        "react": "^16.2.0",
-        "react-dom": "^16.2.0",
-        "react-scripts": "1.0.17",
-        "rsync": "^0.6.1"
-    },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "deploy": "react-scripts build && node deploy",
-        "test": "react-scripts test --env=jsdom",
-        "eject": "react-scripts eject"
-    }
+  "name": "js_source_code",
+  "version": "0.2.0",
+  "private": true,
+  "license": "ISC",
+  "homepage": "/assets",
+  "project_src": "./project.json",
+  "dependencies": {
+    "oboe": "^2.1.4",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-google-login": "^3.0.2",
+    "react-scripts": "1.0.17",
+    "rsync": "^0.6.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "deploy": "react-scripts build && node deploy",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
 }

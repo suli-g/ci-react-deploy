@@ -1,8 +1,8 @@
 const fs = require('fs');//will be used to do the templating if needed
 const Rsync = require('rsync'); //required to actually deploy the app
-let {project_src} = require("./package.json");
+let {project_src} = require("./package.json"); //get the project source object from package json
 
-if (typeof project_src === 'string'){
+if (typeof project_src === 'string'){ //if source is a string, assume it links to another project file.
 	project_src = require(project_src);
 }
 let {
@@ -12,15 +12,77 @@ let {
 		views
 	},
 	index_file="index.php", //name of the file to produce from script
-	template_groups = "__ *([a-z]\w*) *__",
+	template_inputs = ["__([a-zA-Z]\\w*)__"],
 	template_outputs = [["<?=$", "?>"]],
 } = project_src;
-
 assets =  assets.replace("{main}", main);
 views = views.replace("{main}", main);
 
-regex = new RegExp(template_groups, "gi"); //generate regular expression from the template tag array
+const error_template = "regex at index {g} is missing {missing}";
+const error = (index, missing) => error_template.replace(/({g})|({missing})/g, (match, g, m, offset, string) => {
+	if (g) return index;
+	if (m) return missing;
+})
 
+const test_cases = new Map();
+	test_cases.set(/^[^()\s]+/g, "a left template tag")
+	test_cases.set(/\)/g, "a right parenthesis")
+	test_cases.set(/\([^()]+\)/g, "a capture group")
+	test_cases.set(/\(/g, "a left parenthesis")
+	test_cases.set(/[^()\s]+$/, "a right template tag");
+
+const regex_test = (regex, g) =>{
+	let responses = ``;
+	test_cases.forEach((missing, check)=>{
+  		if (!check.test(regex)) {
+  			responses+=`${error(g, missing)}\n`;
+  		}
+	})
+	if (responses.length > 0) console.error( responses);
+	return responses.length;
+}
+const init_templates = input => using =>{
+	let e = [];
+	let result = input.reduce((regex, group, g)=>{
+		group = typeof group === 'string'?[group]:group;
+		if (group instanceof Array){
+			switch(group.length){
+				case 1: //assume you know what you're doing.
+					_regex = group[0]; 
+					break;
+				case 2://assume opening and closing templates are equal
+					_regex = `${group[0]}\\s*(${group[1]})\\s*${group[0]}`; 
+					break;
+				case 3: //assume that you know what you want, but also want to allow lots of space between your template tags
+					_regex = `${group[0]}\\s*(${group[1]})\\s*${group[2]}`; 
+					break;				
+				default: // assume you want lots of groups
+					let [open, ...rest] = group; 
+					let close = rest.splice(rest.length-1);
+					_regex = `${open}(${rest.reduce((a, b)=>{return `${a}|${b}`}, "")})${close}`;
+			}
+			if (regex_test(_regex, g) === 0){
+				return regex + _regex;
+			}
+		}
+		else { //oops -- looks like bad input
+			e.push([g, typeof group]);
+		}
+	},"");
+	if (e.length > 0){
+		e = e.reduce((a, i)=>{
+			a+`${i[0]}: should be an array or string. (found ${i[1]}) `+"\n"}, "");
+
+		let errors = `Input group at index:\n\t ${e}`;
+		console.error(errors);
+	}
+	return using(new RegExp(result, "g"));
+}
+const use_regex = regex =>{
+	console.log(`using templates matching ${regex} ...`);
+	return regex;
+}
+const regex = init_templates(template_inputs)(use_regex);
 const template = (match, ...matches) =>{
 	matches.splice(matches.length - 2, 2);
 	for (let m in matches){
@@ -42,34 +104,38 @@ fs.readFile('./build/index.html', function(error, data){
 });
 
 //Uses the rsync shell command -> https://ss64.com/bash/rsync.html <- more info
-const syncAssets = new Rsync()
-	.flags("avz") //a: exactly copy everything, v: tell me as much as possible, z: then compress the stuff at destination
-	.set('exclude', "/*.php") //don't copy .php file to destination
-	.set("include", "/*") // "/*" means everything in the source folder
-	.source('./build/') // everything necessary is stored in the build folder by default in c-r-a
-	.destination(assets); //destination folder for assets defined in package.json under the "assets" key
-
-const syncView = new Rsync()
-	.flags("avz") //see above
-	.set('include', "/*.php") //see above
-	.set('exclude', '/*') //see above
-	.source('./build/') //see above
-	.destination(views); //see above
-
-syncAssets.execute(function (error, code, cmd){
-	console.log("moving assets...");
-	if (code){
-		console.error(error)
-	}
+//Check also the docs for the rsync npm package (https://www.npmjs.com/package/rsync)
+const progress = (err, code, cmd)=>{
+	if (code) throw [code, err];
 	else {
-		syncView.execute(function(error, code, cmd){
-			console.log("moving index...");
-			if (code){
-				console.error(error)
-			}
-			else {
-				console.log("all files moved");
-			}
-		})
+		console.log(`completed with code ${code}`);
 	}
-});
+};
+const sync = (source, destination)=>(flags="avz")=>(include=null, exclude=null) => (callback=console.log) =>{
+	let rsync = new Rsync()
+	.flags(flags)
+	.set("progress");
+	if (include) rsync.set("include", include)
+	if (exclude) rsync.set("exclude", exclude)
+	rsync.source(source)
+	.destination(destination)
+	.execute(callback);
+}
+const syncAssets = (msg)=> {
+	sync("./build/", assets)()("/*","/*.php")(progress);
+	console.log(msg);
+}
+const syncView = (msg)=> {
+	sync("./build/", views)()("/*.php", "/*")(progress);
+	console.log(msg);
+}
+const exec = (s1, m1="assets deployed") => (s2, m2="view deployed") =>{
+	try {
+		s1(m1);
+		s2(m2);
+	}
+	catch (err){
+		console.error(err[1]);
+	}
+}
+exec(syncAssets)(syncView);

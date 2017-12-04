@@ -1,12 +1,10 @@
 {
     "dir": {
-        "main": "",
-        "views": "../{main}/application/views/",
+    	"main":"msauwc",
+    	"views": "../{main}/application/views/",
         "assets": "../{main}/assets"
     },
     "index_file": "dashboard.php",
-    "template_input": "__ *([a-z]\\w*) *__",
-    "template_groups": [
-        ["<?=$", "?>"]
-    ]
-}
+    "template_inputs": [["__([a-z]\\w*)__"]],
+    "template_outputs": [["<?=$", "?>"]]
+ }
