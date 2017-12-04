@@ -1,22 +1,20 @@
 const fs = require('fs');//will be used to do the templating if needed
 const Rsync = require('rsync'); //required to actually deploy the app
-let {project_src} = require("./package.json"); //get the project source object from package json
+let {project_src={}} = require("./package.json"); //get the project source object from package json
 
 if (typeof project_src === 'string'){ //if source is a string, assume it links to another project file.
 	project_src = require(project_src);
 }
 let {
-	dir:{
-		main, //
-		assets,
-		views
-	},
+	main=".", //
+	assets_dir="./build/",
+	views_dir="./build/",
 	index_file="index.php", //name of the file to produce from script
 	template_inputs = ["__([a-zA-Z]\\w*)__"],
 	template_outputs = [["<?=$", "?>"]],
 } = project_src;
-assets =  assets.replace("{main}", main);
-views = views.replace("{main}", main);
+assets_dir =  assets_dir.replace("{main}", main);
+views_dir = views_dir.replace("{main}", main);
 
 const error_template = "regex at index {g} is missing {missing}";
 const error = (index, missing) => error_template.replace(/({g})|({missing})/g, (match, g, m, offset, string) => {
@@ -38,7 +36,7 @@ const regex_test = (regex, g) =>{
   			responses+=`${error(g, missing)}\n`;
   		}
 	})
-	if (responses.length > 0) console.error( responses);
+	if (responses.length > 0) console.error(responses);
 	return responses.length;
 }
 const init_templates = input => using =>{
@@ -76,13 +74,9 @@ const init_templates = input => using =>{
 		let errors = `Input group at index:\n\t ${e}`;
 		console.error(errors);
 	}
-	return using(new RegExp(result, "g"));
+	return new RegExp(result, "g");
 }
-const use_regex = regex =>{
-	console.log(`using templates matching ${regex} ...`);
-	return regex;
-}
-const regex = init_templates(template_inputs)(use_regex);
+const regex = init_templates(template_inputs);
 const template = (match, ...matches) =>{
 	matches.splice(matches.length - 2, 2);
 	for (let m in matches){
@@ -105,37 +99,31 @@ fs.readFile('./build/index.html', function(error, data){
 
 //Uses the rsync shell command -> https://ss64.com/bash/rsync.html <- more info
 //Check also the docs for the rsync npm package (https://www.npmjs.com/package/rsync)
-const progress = (err, code, cmd)=>{
-	if (code) throw [code, err];
-	else {
-		console.log(`completed with code ${code}`);
-	}
-};
-const sync = (source, destination)=>(flags="avz")=>(include=null, exclude=null) => (callback=console.log) =>{
+const sync = (source, destination)=>(
+	flags="avz")=>(
+	include=null, exclude=null, current=/assets/.test(destination)?"assets":"views"
+	) =>{
 	let rsync = new Rsync()
 	.flags(flags)
-	.set("progress");
 	if (include) rsync.set("include", include)
 	if (exclude) rsync.set("exclude", exclude)
 	rsync.source(source)
 	.destination(destination)
-	.execute(callback);
+	.execute((err, code, cmd)=>{
+	if (code) throw `current directory: ${current} \n\t ->\t${cmd} ->\n\t failed with code ${code}\n\t\t${err}`;
+	else {
+		console.log(`current directory: ${current} \n\t ->\t${cmd} ->\n\t deployed with no problems.`);
+		return true;
+	}
+});
 }
-const syncAssets = (msg)=> {
-	sync("./build/", assets)()("/*","/*.php")(progress);
-	console.log(msg);
-}
-const syncView = (msg)=> {
-	sync("./build/", views)()("/*.php", "/*")(progress);
-	console.log(msg);
-}
+
 const exec = (s1, m1="assets deployed") => (s2, m2="view deployed") =>{
 	try {
-		s1(m1);
-		s2(m2);
+		sync("./build/", assets_dir)()("/*","/*.php");
+		sync("./build/", views_dir)()("/*.php", "/*");
 	}
 	catch (err){
-		console.error(err[1]);
+		console.error(err);
 	}
 }
-exec(syncAssets)(syncView);
