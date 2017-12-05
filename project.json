@@ -1,10 +1,10 @@
 {
-    "dir": {
-    	"main":"msauwc",
-    	"views": "../{main}/application/views/",
-        "assets": "../{main}/assets"
-    },
+    "src": ".",
+    "outlet":"../msauwc",
+    "build": "build",
+    "views": "{outlet}/application/views/",
+    "assets": "{outlet}/assets",
     "index_file": "dashboard.php",
-    "template_inputs": [["__([a-z]\\w*)__"]],
-    "template_outputs": [["<?=$", "?>"]]
- }
+    "template_input": [["__([a-zA-Z]\\w*)__"], [">|<","[\\w -]+"], ["|...", "[a-zA-Z]\\w*"] ],
+    "template_output": [ ["<?=$ ", "?>"],["<?php ","?>"], ["<?php foreach ($", "as $key=>$value):?>"]]
+}
