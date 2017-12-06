@@ -13,6 +13,7 @@ A simple script for converting and templating a frontend index file into a backe
 1. Download `deploy.js` and place it inside your project root directory.
 2. run `node deploy` in the directory containing [the script](#script).
 
+## Example use case (coming soon - will be `create-react-app` related):
 
 ## Installing
 
