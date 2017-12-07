@@ -1,4 +1,5 @@
 # Name Pending...
+This program was originally created to be used with [create-react-app](https://github.com/facebookincubator/create-react-app) and [codeigniter](https://www.codeigniter.com/) - Usage example is a bit less pendy than the name of this repo.
 A simple script for converting and templating a frontend index file into a backend file (like php).
 
 ## Prerequisites
