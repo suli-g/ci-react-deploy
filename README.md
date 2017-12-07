@@ -87,15 +87,18 @@ The program runs through 5 checks for every `input_template` and throws an excep
     * stuff between parentheses
     * right parenthesis
 
-a. Since these are sort of core checks, They haven't been made modifiable except in the source code.
-b. The source code, now in its initial stages, is super messy.
-c. There are plans to make it es6-classical later on.
+
+* Since these are sort of core checks, They haven't been made modifiable except in the source code.
+* The source code, now in its initial stages, is super messy.
+* There are plans to make it es6-classical later on.
 
 Exceptions for templates use the following format:
-
+> 
+```bash 
 (node:12345) Warning: template error
 index1: regex1 | error1
 index2: regex2 | error1
+```
 
 (the words above are placeholders for actual things)
 ## Example usage (coming soon)
