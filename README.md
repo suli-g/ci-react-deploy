@@ -24,14 +24,14 @@ The default behaviour may not be the most desirable so the program allows a `blu
 
 |Field|Type|Default
 |:---|:---:|---:|
-|src|string|"."
-|outlet|string|"."
-|build|string|"build"
-|assets|string|"{outlet}"
-|views|string|"{outlet}"
-|index_file|string|"index.php"|
-|template_input|array| `[["__","[a-zA-Z]\\w*"]]` |
-|template_output|array| `[["<?=$", "?>"]]` |
+| src | string |"."
+| outlet| string |"."
+| build| string |"build"
+| assets| string |"{outlet}"
+| views| string |"{outlet}"
+| index_file| string |"index.php"|
+| template_input| array | `[["__","[a-zA-Z]\\w*"]]` |
+| template_output| array | `[["<?=$", "?>"]]` |
 
 ### Template rules:
 1. `template_output & template_input`:
@@ -58,7 +58,7 @@ Children of the `template_input` array are treated in 4 distinct ways depending 
 | (n, k; n > 3, 0 < k < n-1) | `rule[n]` | `['_a_', ...g, _b_]` | `/_a_(...g)_b_/g` |
 | `rule [0]` | treat as opening tag | `*` | `_a_` |
 | `rule [k]` | treat as closing tag | `*` | `_b_` |
-| `rule [n-1]` | treat as pipe separated capture group | `*` | `(g[0]|g[1]...|g[n-1])` |
+| `rule [n-1]` | treat as pipe separated capture group | `*` | `(g[0]\|g[1]...\|g[n-1])` |
 
 --
 
@@ -90,9 +90,9 @@ c. There are plans to make it es6-classical later on.
 
 Exceptions for templates use the following format:
 
-(node:abc) Warning: template error
+(node:12345) Warning: template error
 index1: regex1 | error1
-index2: regex2| error1
+index2: regex2 | error1
 
 (the words above are placeholders for actual things)
 ## Example usage (coming soon)
