@@ -13,17 +13,17 @@ A simple script for converting and templating a frontend index file into a backe
 1. Download `deploy.js` and place it inside your project root directory.
 2. run `node deploy` in the directory containing [the script](#script).
 
-### Settings
+## Blueprint
 The default behaviour may not be the most desirable so the program allows a `blueprint` to be declared in 3 ways:
 1. As an argument when `node deploy` is executed (e.g. `node deploy ./some_file.json`)
 2. As a field in `package.json` - should be called "blueprint" and can be either a string or an object:
     * If `blueprint` is a string - it should be a path to a file containing a `blueprint` object.
     * If `blueprint` is an object - it should follow the blueprint layout to be useful.
 
-#### Blueprint Layout
+### Blueprint Layout
 
 |Field|Type|Default
-|---|:---:|:---:|
+|:---|:---:|---:|
 |src|string|"."
 |outlet|string|"."
 |build|string|"build"
@@ -44,7 +44,7 @@ The default behaviour may not be the most desirable so the program allows a `blu
     * should be an array of arrays (`* or some other data structure which meets the below criteria`)
         * each child array should have an entry at indices 0 and 1 (this is how the program grabs templates)
 
-####  `template_input`:
+###  `template_input`:
 Each entry in the `template_input` array should have an output matching `^[^()\s]+\([^()]+\)[^()\s]+$` (like `abc(sdasdasd)abc`)
 * If you define a `template_input` field without a `template_output` field - then `template_input` must have a maximum length of 1.
 
@@ -53,9 +53,12 @@ Children of the `template_input` array are treated in 4 distinct ways depending 
 | length | behaviour | input | output |
 |:---:|---|---|---|
 | 1 | treat entire entry as desired regular expression | `['__(\w*)__']` | `/__(\w*)__/g` |
-| 2 | treat (0) as the capture group and (1) as both opening and closing template tags. | `['__', '\w*']` | `/__(\w*)__/g` |
-| 3 | treat (1) as the capture group, then (0) and (2) as the template tags | `['__', '\w*', _n]` | `/__(\w*)_n/g` |
-| n, n > 3 | treat (0) and (n) as template tags, then (k, 0<k<n) as a pipe-separated capture group | `['__', '^4','\w*', __]` | `/__(^4\|\w*)__/g` |
+| 2 | treat (0) as capture group and (1) as both template tags. | `['__', '\w*']` | `/__(\w*)__/g` |
+| 3 | treat (1) as the capture group, then (0) and (2) as template tags | `['__', '\w*', _n]` | `/__(\w*)_n/g` |
+| (n, k; n > 3, 0 < k < n-1) | `rule[n]` | `['_a_', ...g, _b_]` | `/_a_(...g)_b_/g` |
+| `rule [0]` | treat as opening tag | `*` | `_a_` |
+| `rule [k]` | treat as closing tag | `*` | `_b_` |
+| `rule [n-1]` | treat as pipe separated capture group | `*` | `(g[0]|g[1]...|g[n-1])` |
 
 --
 
@@ -63,7 +66,7 @@ Children of the `template_input` array are treated in 4 distinct ways depending 
 Each entry in `template_output` should be an array of length 2. The program uses indices to select items from `template_output`, therefore if the user instead uses a string or array-like object, it will still work).
 
 |match|output array|result|
-|---|---|---|
+|:---|---|---|
 |`__(dog flew)__`|`["The ", " up high"]`|`The dog flew up high`|
 
 * Notice that the capture group (ex. `(stuff)`) is absolutely necessary.
@@ -86,11 +89,13 @@ b. The source code, now in its initial stages, is super messy.
 c. There are plans to make it es6-classical later on.
 
 Exceptions for templates use the following format:
+
 (node:abc) Warning: template error
-index1: regex | error1
-index1: regex | error2
-index2: regex | error1
+index1: regex1 | error1
+index2: regex2| error1
+
 (the words above are placeholders for actual things)
+## Example usage (coming soon)
 
 ## License
 
