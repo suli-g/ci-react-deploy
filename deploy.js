@@ -34,8 +34,8 @@ try {
 		output="./output/",
 		src="./build/",
 		outlet="./", 
-		assets="{outlet}", 
-		views="{outlet}", 
+		assets="{outlet}/assets", 
+		views="{outlet}/views", 
 		index_file="index.php", 
 		template_input =  [["__","[a-zA-Z]\\w*"]], 
 		template_output = [["<?=$", "?>"]], 
@@ -73,7 +73,7 @@ if (fs.existsSync(index_html = `${src}index.html`)){
 					//Uses the rsync shell command -> https://ss64.com/bash/rsync.html <- more info
 					//Check also the docs for the rsync npm package (https://www.npmjs.com/package/rsync)
 					sync(src, output, new Rsync().set("exclude", "index.html").set("include", "/*"));
-					sync(output, assets_dir, new Rsync().set("exclude", index_file).set("include", "/*"));
+					sync(output, assets_dir, new Rsync().set("exclude", `/${index_file}`).set("include", "/*"));
 					sync(output, views_dir, new Rsync().set("include", index_file).set("exclude", "/*").set("include", index_file));
 				}
 			}); 
