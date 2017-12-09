@@ -1,0 +1,8 @@
+{
+	"index_file": "example.php",
+	"outlet": ".",
+	"assets": "{outlet}/example/assets",
+	"views": "{outlet}/example/views",
+    "template_input": [["__", "[a-z]+"], ["_._", "is"], ["_=_", "up"], ["<span>", "[a-z ]*","<\\/span>"]],
+    "template_output": ["This is an introductory template", "to show case the tool", ["<strong>","in all its glory.", "</strong>"], "<style rel='stylesheet' src='./style.css'></style>"]
+}
