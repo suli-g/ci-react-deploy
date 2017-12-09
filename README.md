@@ -1,20 +1,24 @@
-# Name Pending...
-A simple program for converting and templating a frontend index file into a backend file (like php).
+# front2back
+A simple program for converting and templating a frontend index.html file into a backend file (like php or whatever).
 
 This program was originally created to be used with [create-react-app](https://github.com/facebookincubator/create-react-app) and [codeigniter](https://www.codeigniter.com/) - Usage example is a bit less pendy than the name of this repo.
 
-
 ## Prerequisites
 1. [Node js](https://nodejs.org/) updated to latest version (needs to support es6).
-2. An `index.html` file in the same directory as `deploy.js`.
+2. An `index.html` file..
 3.* Support for [rsync.js](https://www.npmjs.com/package/rsync)
   * If you are on a windows 10 PC, then I recommend getting the Windows subsystem for Linux:
     * [what's that?](https://msdn.microsoft.com/en-us/commandline/wsl/about)
     * [where do I get it?](https://msdn.microsoft.com/en-us/commandline/wsl/install-win10)
     
 ## Getting started
-1. Download `deploy.js` and place it inside your project root directory.
-2. run `node deploy` in the directory containing [the script](#script).
+* Clone this repo and `cd` into the root directory (of this repo).
+* run `node deploy`.
+* You should see 2 new directories - `./output` and `./example`.
+    * The `./output` directory is just a step taken to avoid overwriting the source `index.html`
+    * In the `./example` directory, you'll see 2 subdirectories (similar to a simple codeigniter setup):
+        1. `{outlet}/views/ --> ./example/views/`
+        2. `{outlet}/assets/ --> ./example/assets/ `
 
 ## Blueprint
 The default behaviour may not be the most desirable so the program allows a `blueprint` to be declared in 3 ways:
@@ -27,29 +31,47 @@ The default behaviour may not be the most desirable so the program allows a `blu
 
 |Field|Type|Default
 |:---|:---:|---:|
-| src | string |"."
-| outlet| string |"."
-| build| string |"build"
-| assets| string |"{outlet}"
-| views| string |"{outlet}"
+| assets| string |"{outlet}/assets"
 | index_file| string |"index.php"|
+| outlet| string |"."
+| output | string |`"./output/"`
+| src | string |"./build/"
+| views| string |"{outlet}/views"
 | template_input| array | `[["__","[a-zA-Z]\\w*"]]` |
 | template_output| array | `[["<?=$", "?>"]]` |
 
-### Template rules:
-1. `template_output & template_input`:
-    * should have the same length.
-2. `template_input`:
-    * should be an array of arrays or strings
-        * if an element is a string, it will be appended to an empty array.
+#### assets
+The folder containing your assets - this would contain everything except your `index_file`.
 
-3. `template_output`:
-    * should be an array of arrays (`* or some other data structure which meets the below criteria`)
-        * each child array should have an entry at indices 0 and 1 (this is how the program grabs templates)
+#### index_file
+The name of the file output when the `node deploy` command is run (by default it is assumed to be a php file, however because the extension is required too - any backend should theoretically work).
+
+#### outlet
+The name of the root directory to which your app will be deployed.
+
+#### output
+The name of the folder to which everything will be moved **before** deploying the app (could be considered a deployment as well, since everything but the `index_file` will be the same as the `src` directory.
+
+#### src
+This is the source of your `index.html` - in the case of `create-react-app`, this would be `./build/` (the default).
+
+#### views
+The folder containing your views - this would contain your `index_file`.
+
+#### template_input
+An array of Regular expression strings to which the content of `index.html` will be matched. (see Template rules below for more information).
+
+#### template_output
+An array of replacements to matches found on comparing `index.html` with `template_input` (see Template rules below for more information).
+
+### Template rules:
+`template_input` and `template_output`:
+    * should have the same length.
+    * should be an array of arrays or strings
 
 ###  `template_input`:
-Each entry in the `template_input` array should have an output matching `^[^()\s]+\([^()]+\)[^()\s]+$` (like `abc(sdasdasd)abc`)
-* If you define a `template_input` field without a `template_output` field - then `template_input` must have a maximum length of 1.
+Each entry in the `template_input` array should have an ***output*** matching `^[^()\s]+\([^()]+\)[^()\s]+$` (like `abc(sdasdasd)abc`)
+* If you define a `template_input` field without a `template_output` field - then `template_input` must have a maximum length of 1 (to use default `template_output`).
 
 Children of the `template_input` array are treated in 4 distinct ways depending upon their length:
 
@@ -66,16 +88,21 @@ Children of the `template_input` array are treated in 4 distinct ways depending 
 --
 
 #### `template_output`
-Each entry in `template_output` should be an array of length 2. The program uses indices to select items from `template_output`, therefore if the user instead uses a string or array-like object, it will still work).
+The table below illustrates the behaviour of of the templater regarding the type and length of an entry in `template_output` :
 
-|match|output array|result|
-|:---|---|---|
-|`__(dog flew)__`|`["The ", " up high"]`|`The dog flew up high`|
+|type|length|behaviour|
+|:--|:---|---|
+|string|1*|replace entire match|
+|number|1*|replace entire match|
+|array|1|treat as matching tags - use `input match` as text|
+|array|2|treat as distinct tags - use `input match` as text|
+|array|3|treat as distinct tags - use (1) as text|
+|array|>4|throw error|
 
 * Notice that the capture group (ex. `(stuff)`) is absolutely necessary.
 
 
-#### Error handling:
+####  `template_input` error handling:
 The program runs through 5 checks for every `input_template` and throws an exception accordingly when a check fails.
 
 # The 5 Checks:
@@ -89,8 +116,6 @@ The program runs through 5 checks for every `input_template` and throws an excep
 
 
 * Since these are sort of core checks, They haven't been made modifiable except in the source code.
-* The source code, now in its initial stages, is super messy.
-* There are plans to make it es6-classical later on.
 
 Exceptions for templates use the following format:
 > 
@@ -100,8 +125,6 @@ index1: regex1 | error1
 index2: regex2 | error1
 ```
 
-(the words above are placeholders for actual things)
-## Example usage (coming soon)
 
 ## License
 
