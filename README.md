@@ -1,3 +1,7 @@
+>Ideas for future versions:
+>React prerendering
+>Custom prerendering
+
 # front2back
 A simple program for converting and templating a frontend index.html file into a backend file (like php or whatever).
 
