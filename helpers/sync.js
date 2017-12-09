@@ -14,7 +14,7 @@ const prep = (destination) =>{
 		return fs.existsSync(destination);
 	}
 	catch(err){
-		throw err;
+		process.emitWarning(err)
 	}
 }
 exports.sync = (source, destination, rsync, flags="avz") =>{
@@ -35,7 +35,6 @@ exports.sync = (source, destination, rsync, flags="avz") =>{
 				if (code) {
 					throw code;
 				}
-				else log("| deployed with no problems");
 			});	
 		}
 		catch (code){
