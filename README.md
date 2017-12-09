@@ -5,8 +5,8 @@ This program was originally created to be used with [create-react-app](https://g
 
 ## Prerequisites
 1. [Node js](https://nodejs.org/) updated to latest version (needs to support es6).
-2. An `index.html` file..
-3.* Support for [rsync.js](https://www.npmjs.com/package/rsync)
+2. An `index.html` file
+3. Support for [rsync.js](https://www.npmjs.com/package/rsync)
   * If you are on a windows 10 PC, then I recommend getting the Windows subsystem for Linux:
     * [what's that?](https://msdn.microsoft.com/en-us/commandline/wsl/about)
     * [where do I get it?](https://msdn.microsoft.com/en-us/commandline/wsl/install-win10)
