@@ -1,6 +1,6 @@
->Ideas for future versions:
->React prerendering
->Custom prerendering
+> Ideas for future versions:
+>* React prerendering
+>* Custom prerendering
 
 # front2back
 A simple program for converting and templating a frontend index.html file into a backend file (like php or whatever).
@@ -133,8 +133,3 @@ index2: regex2 | error1
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
---- 
-[1] : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
-[2] : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
-[3] : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator
