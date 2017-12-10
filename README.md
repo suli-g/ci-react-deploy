@@ -16,22 +16,32 @@ This program was originally created to be used with [create-react-app](https://g
     * [where do I get it?](https://msdn.microsoft.com/en-us/commandline/wsl/install-win10)
     
 ## Getting started
-* Clone this repo and `cd` into the root directory (of this repo).
-* run `node deploy`.
-* You should see 2 new directories - `./output` and `./example`.
-    * The `./output` directory is just a step taken to avoid overwriting the source `index.html`
-    * In the `./example` directory, you'll see 2 subdirectories (similar to a simple codeigniter setup):
-        1. `{outlet}/views/ --> ./example/views/`
-        2. `{outlet}/assets/ --> ./example/assets/ `
+### Installation
+`npm install front-to-back -g` 
 
-## Blueprint
-The default behaviour may not be the most desirable so the program allows a `blueprint` to be declared in 3 ways:
-1. As an argument when `node deploy` is executed (e.g. `node deploy ./some_file.json`)
-2. As a field in `package.json` - should be called "blueprint" and can be either a string or an object:
-    * If `blueprint` is a string - it should be a path to a file containing a `blueprint` object.
-    * If `blueprint` is an object - it should follow the blueprint layout to be useful.
+### Usage
+In the root of your project (where `package.json` is), run `f2b` from the command line.
 
-### Blueprint Layout
+The default behaviour may not be the most desirable so the program allows a `project_src` to be declared in 3 ways:
+1. As an additional argument when `f2b` is executed (e.g. `f2b ./some_file.json`)
+2. As a field in `package.json` - should be called `"project_src"` and can be either a string or an object:
+    * If `project_src` is a string - it should be a path to a file containing a `blueprint` object.
+    * If `project_src` is an object - it should follow the blueprint layout to be useful.
+
+
+### Example (Will work even without installing this package globally)
+In a terminal type the following:
+1. `git clone https://github.com/suli-g/front-to-back.git`
+2. `cd front-to-back`
+3. If you've installed `front-to-back` globally:
+    * `f2b`
+3. If you haven't installed `front-to-back` globally:
+    * `node index.js`
+4. Two new folders should have been generated:
+    * `./output` <-- contains all files that will be deployed (perhaps a future version should contain only the index output file)
+    * `./example` <-- This is how it would look when deployed.
+
+### `Project_src` Layout
 
 |Field|Type|Default
 |:---|:---:|---:|
