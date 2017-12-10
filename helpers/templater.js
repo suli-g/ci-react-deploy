@@ -1,7 +1,6 @@
 const {reg_val} = require("./reg_val");
 const {log} = require("./log")
 
-console.log(reg_val);
 exports.templater = input =>{
 	let errors = [];
 	let result = input.reduce((regex, group, g)=>{

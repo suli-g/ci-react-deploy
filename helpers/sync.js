@@ -29,17 +29,12 @@ exports.sync = (source, destination, rsync, flags="avz") =>{
 	}
 	else {
 		prep(destination);
-		try {
-			rsync.execute((err, code, cmd)=>{
-				log(`Trying: ${cmd}`);
-				if (code) {
-					throw code;
-				}
-			});	
-		}
-		catch (code){
-			let explanation = errors.has(code)?`\n${errors.get(code)}`:"";
-			process.emitWarning(`\nFailed with code ${code} ${explanation}\n\n${errors.get("default")}`);
-		}		
+		rsync.execute((err, code, cmd)=>{
+			log(`Trying: ${cmd}`);
+			if (code) {
+				const explanation = errors.get(code)||"";
+				process.emitWarning(`\nFailed with code ${code} ${explanation}\n\n${errors.get("default")}`);
+			}
+		});		
 	}
 }

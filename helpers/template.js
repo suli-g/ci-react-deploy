@@ -1,4 +1,4 @@
-module.exports.template = (x, ...rest) =>{
+module.exports.template = template_output => (x, ...rest) =>{
 	let matches = rest.filter((match, i)=>i%2===1&&i<rest.length-2);
 	try {for (let m in matches){ //check all capture groups and template match where necessary
 			let match = matches[m];

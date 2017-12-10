@@ -1,17 +1,18 @@
 {
-  "name": "js_source_code",
-  "version": "0.2.0",
-  "private": true,
-  "license": "ISC",
-  "project_src": "./example.json",
-  "dependencies": {
-    "rsync": "^0.6.1"
+  "name": "front-to-back",
+  "version": "1.0.0",
+  "description": "Simple script to deploy and template index.html to another filetype",
+  "main": "index.js",
+  "bin":{
+    "f2b": "./index.js"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "deploy": "react-scripts build && node deploy",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "suli-g <suligzus@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "f2b": "^1.0.0",
+    "rsync": "^0.6.1"
   }
 }
