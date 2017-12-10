@@ -16,13 +16,29 @@ This program was originally created to be used with [create-react-app](https://g
     * [where do I get it?](https://msdn.microsoft.com/en-us/commandline/wsl/install-win10)
     
 ## Getting started
-* Clone this repo and `cd` into the root directory (of this repo).
-* run `node deploy`.
-* You should see 2 new directories - `./output` and `./example`.
+### Installation
+`npm install front-to-back -g` 
+
+### Usage
+In the root of your project (where `package.json` is), run `f2b` from the command line.
+
+* You should see 2 new directories - `./output` and `./project`.
     * The `./output` directory is just a step taken to avoid overwriting the source `index.html`
-    * In the `./example` directory, you'll see 2 subdirectories (similar to a simple codeigniter setup):
-        1. `{outlet}/views/ --> ./example/views/`
-        2. `{outlet}/assets/ --> ./example/assets/ `
+    * In the `./project` directory, you'll see 2 subdirectories (similar to a simple codeigniter setup):
+        1. `{outlet}/views/ --> ./project/views/`
+        2. `{outlet}/assets/ --> ./project/assets/ `
+
+### Example (Will work even without installing this package globally)
+In a terminal do the following:
+1. `git clone https://github.com/suli-g/front-to-back.git`
+2. `cd front-to-back`
+3. If you've installed `front-to-back` globally:
+    * type `f2b`
+3. If you haven't installed `front-to-back` globally:
+    * type `node index.js`
+4. Two new folders should have been generated:
+    * `./output` <-- contains all files that will be deployed (perhaps a future version should contain only the index output file)
+    * `./example` <-- This is how it would look when deployed.
 
 ## Blueprint
 The default behaviour may not be the most desirable so the program allows a `blueprint` to be declared in 3 ways:
