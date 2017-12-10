@@ -2,11 +2,9 @@
 # yarn lockfile v1
 
 
-f2b@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/f2b/-/f2b-1.0.0.tgz#1958c18cae9fcd0d5cbc45cd161c0c247da7fc40"
-  dependencies:
-    rsync "^0.6.1"
+colors@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/colors/-/colors-1.1.2.tgz#168a4701756b6a7f51a12ce0c97bfa28c084ed63"
 
 rsync@^0.6.1:
   version "0.6.1"

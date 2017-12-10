@@ -2,9 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 const Rsync = require('rsync');
-const {settings, deploy} = require("./scripts/ops");
+const {settings, deploy, warn} = require("./scripts/ops");
 
-let project = settings(path.resolve(process.cwd(), process.argv[2])||path.resolve(process.cwd(),"./package.json"));
+let project = settings(path.resolve(process.cwd(), process.argv[2]||"./package.json"));
 
 try {
 	let {
@@ -18,15 +18,14 @@ try {
 		template_output = [["<?=$", "?>"]], 
 	} = project;
 	if (template_input.length !== template_output.length ){
-		let n = Math.abs(template_input.length - template_output.length);
-		throw `I/O mismatch:\n\t${n<0?"template_input":"template_output"} needs ${n} more element${n>0?"s":""}`;
+		let n = Math.abs(template_input.length - template_output.length).toString();
+		throw `${(n<0?"template_input":"template_output").cyan} needs ${n.yellow} more element${n>0?"s":""}`;
 	}
-	// output = path.resolve(process.cwd(),output);
 	outlet = outlet.replace("{output}", output);
 	assets_dir =  assets.replace("{outlet}", outlet)
 	views_dir = views.replace("{outlet}", outlet);
 	deploy(src, output, template_input, template_output, index_file, assets_dir, views_dir);
 } catch (error){
-	process.emitWarning(error, "Initialization Error");
+	warn(error, "Initialization Error");
 }
 

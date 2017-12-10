@@ -1,3 +1,4 @@
+const {warn} = require("./log");
 module.exports.template = template_output => (x, ...rest) =>{
 	let matches = rest.filter((match, i)=>i%2===1&&i<rest.length-2);
 	try {for (let m in matches){ //check all capture groups and template match where necessary
@@ -31,8 +32,8 @@ module.exports.template = template_output => (x, ...rest) =>{
 	} catch (error){
 		if (error instanceof Array){
 			let [index, warning] = error;
-			process.emitWarning(`template_output --> ${index}: ${warning}`)
+			warn(`template_output --> ${index.red}: ${warning.bgYellow}`)
 		}
-		else process.emitWarning(error)
+		else warn(error)
 	}
 }

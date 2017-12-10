@@ -1,7 +1,7 @@
-exports.log = (...messages)=> {
-	let line = "----------\n";
-	process.stdout.write(line); //open with a line
-	messages.forEach((msg)=>{
-			process.stdout.write(`${msg}\n`);
-	});
+const colors = require("colors");
+const {log} = console;
+const warn = (warning, ...rest)=> {
+	if (!rest) process.emitWarning(warning.red);
+	else process.emitWarning(warning.red, ...rest);
 }
+module.exports = {warn, log};
