@@ -1,5 +1,5 @@
 const fs = require("fs");
-const {log} = require("./log");
+const {log, warn} = require("./log");
 const {errors} = require("./errors");
 
 const prep = (destination) =>{
@@ -14,7 +14,7 @@ const prep = (destination) =>{
 		return fs.existsSync(destination);
 	}
 	catch(err){
-		process.emitWarning(err)
+		warn(err)
 	}
 }
 exports.sync = (source, destination, rsync, flags="avz") =>{
@@ -33,7 +33,7 @@ exports.sync = (source, destination, rsync, flags="avz") =>{
 			log(`Trying: ${cmd}`);
 			if (code) {
 				const explanation = errors.get(code)||"";
-				process.emitWarning(`\nFailed with code ${code} ${explanation}\n\n${errors.get("default")}`);
+				warn(`Failed with code ${code} ${explanation}\n\n${errors.get("default")}`);
 			}
 		});		
 	}

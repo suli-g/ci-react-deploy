@@ -15,7 +15,7 @@ exports.deploy = (src, output, template_input, template_output, index_file, asse
     if (fs.existsSync(index_html = `${src}/index.html`)) {
         fs.readFile(index_html, function(error, data) {
             if (error) {
-                process.emitWarning(error);
+                warn(error);
             }
             fs.mkdir(output, (err) => {
                 if (err) {
@@ -26,12 +26,10 @@ exports.deploy = (src, output, template_input, template_output, index_file, asse
                 }
                 let text = data.toString().replace(regex, template(template_output));
                 fs.writeFile(`${output}/${index_file}`, text, 'utf8', (err) => {
-                    if (err) { process.emitWarning(err); } else {
+                    if (err) { warn(err); } else {
                         //Uses the rsync shell command -> https://ss64.com/bash/rsync.html <- more info
                         //Check also the docs for the rsync npm package (https://www.npmjs.com/package/rsync)
-                        console.log(src, output)
-                        sync(src, output, new Rsync().set("exclude", "index.html").set("include", "/*"));
-                        sync(output, assets_dir, new Rsync().set("exclude", `/${index_file}`).set("include", "/*"));
+                        sync(src, assets_dir, new Rsync().set("exclude", "/index.html").set("include", "/*"));
                         sync(output, views_dir, new Rsync().set("include", index_file).set("exclude", "/*").set("include", index_file));
                     }
                 });

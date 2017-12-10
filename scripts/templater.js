@@ -1,5 +1,5 @@
 const {reg_val} = require("./reg_val");
-const {log} = require("./log")
+const {log, warn} = require("./log")
 
 exports.templater = input =>{
 	let errors = [];
@@ -33,15 +33,15 @@ exports.templater = input =>{
 			}
 		}
 		else { //oops -- looks like bad input (put group index and type aside for later -- so we can throw all errors together like confetti)
-			errors.push(`should be an array or string. (found ${typeof group})`);
+			errors.push(`should be an ${"array".cyan} or ${"string".cyan}. ${`(found ${typeof group})`.yellow}`);
 			return "";
 		}
 	},"");
 	if (errors.length > 0){ //if there's any confetti -- it's time to throw them
 		errors = errors.reduce((all, current)=>all+`${current[0]}: ${current[1]}\n`, "");
-		process.emitWarning("Template error\n"+col.r+errors+col.g); //Happy birthday! (confetti thrown - time well spent)
+		warn("Template error\n"+col.r+errors+col.g); //Happy birthday! (confetti thrown - time well spent)
 	}
 	//looks like everything is okay - make that regex! But keep it global in case user wants to do different stuff for different cases.
-	log(`matching templates according to ${result}`);
+	log(`matching templates according to ${result.cyan}`);
 	return new RegExp(result, "g");
 }
